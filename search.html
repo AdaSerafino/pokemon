@@ -30,11 +30,12 @@
 
     <div style ="display: block; margin: 50px auto 300px auto;">
        <form id="name">
-           <input style ="display: block; margin: 0 auto;" type="search">
+           <input style ="display: block; margin: 0 auto;" id="pName" type="search">
            <input style ="display: block; margin: 0 auto;" type="submit">
        </form>
        <br>
-       <table style="width:60%" >
+    <div style="display: block; margin: 0 auto;" >
+       <table style="width:60% ; text-align: center;" >
         <thead style="border: solid, 2px, black;">
             <th>NAME</th>
             <th>TYPE</th>
@@ -43,7 +44,7 @@
         <tbody id="tbody">
         </tbody>
    </table>
-
+</div>
 
     </div>
     <div style ="display: block; margin: 50px auto 300px auto;">
@@ -53,37 +54,102 @@
            
         </form>
         <br>
-        <table  style="width:60%" >
+        <div>
+        <table  style="width:60% ; text-align: center;" >
             <thead style="border: solid, 2px, black;">
                 <th>NAME</th>
                 <th>TYPE</th>
             
             </thead>
-            <tbody id="tbody">
+            <tbody id="tbody2">
             </tbody>
        </table>
+    </div> 
     </div>
 </body>
 <script>
+          
     let typeForm = document.querySelector("#type");
       typeForm.addEventListener("submit", handleTypeSubmit);
       
     let nameForm = document.querySelector("#name");
       nameForm.addEventListener("submit", handleNameSubmit);
       
-      function handleNameSubmit(event) {
+
+function handleNameSubmit(event) {
           event.preventDefault();
-      
+
+    
+        let searched = document.querySelector("#pName").value;
+
         let apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=2000";
         axios.get(apiUrl).then(showData)
       
         function showData(response){
+        let pokemons = response.data.results;
+
+        function filterItems(arr, query) {
+            return arr.filter(function(el) {
+            return (el.name).toLowerCase().indexOf(query.toLowerCase()) !== -1
+  })
+}      
+        function filterTable(){
+            let newData = filterItems(pokemons, `${searched}`);
+
+            let length = newData.length;
+                for( let i = 0; i < length; i++) {  
+                    let cell= document.createElement("tr")
+                    cell.innerHTML = "<tr>" + "<td>" + newData[i].name +"</td>"+"</tr>";
+                document.getElementById("tbody").appendChild(cell);
+               } 
+
+                nameForm.addEventListener("submit", reset, handleNameSubmit);
+
+               function reset() {
+                   tbody= document.getElementById("tbody");
+                   tbody.innerHTML = " ";
+               }
+            }    
+        filterTable();
+     
+      } 
       
-           console.log(response.data.results)
-      }
- 
-         
-      }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       function handleTypeSubmit(event) {
           event.preventDefault();
       
